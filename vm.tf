@@ -6,7 +6,7 @@ provider "azurerm" {
 
 resource "azurerm_resource_group" "rg" {
   name     = "rg-vmwindows"
-  location = "eastus"
+  location = "westus"
 }
 
 resource "azurerm_virtual_network" "vnet" {
