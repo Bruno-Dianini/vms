@@ -5,7 +5,6 @@ jobs:
   infracost:
     runs-on: ubuntu-latest # The following are JavaScript actions (not Docker)
     env:
-      working-directory: ${{ github.workspace }} # Update this!
       ARM_CLIENT_ID: ${{ secrets.TF_ARM_CLIENT_ID }}
       ARM_CLIENT_SECRET: ${{ secrets.TF_ARM_CLIENT_SECRET }}
       ARM_SUBSCRIPTION_ID: ${{ secrets.TF_ARM_SUBSCRIPTION_ID }}
@@ -27,16 +26,13 @@ jobs:
 
       - name: Terraform init
         run: terraform init
-        working-directory: ${{ env.working-directory }}
 
       - name: Terraform plan
         run: terraform plan -out tfplan.binary
-        working-directory: ${{ env.working-directory }}
 
       - name: Terraform show
         run: terraform show -json tfplan.binary > plan.json
-        working-directory: ${{ env.working-directory }}
-      
+              
       # Install the Infracost CLI, see https://github.com/infracost/actions/tree/master/setup
       # for other inputs such as version, and pricing-api-endpoint (for self-hosted users).
       - name: Setup Infracost
@@ -49,7 +45,6 @@ jobs:
       # Combine Infracost JSON files: https://www.infracost.io/docs/features/cli_commands/#combined-output-formats
       - name: Generate Infracost JSON
         run: infracost breakdown --path plan.json --format json --out-file /tmp/infracost.json
-        working-directory: ${{ env.working-directory }}
         # Env vars can be set using the usual GitHub Actions syntax
         # See the list of supported Infracost env vars here: https://www.infracost.io/docs/integrations/environment_variables/
         # env:
